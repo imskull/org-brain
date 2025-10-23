@@ -851,6 +851,7 @@ CREATE-ID asks to create an ID öif  there isn't  one already."
   "Run `org-element-parse-buffer' on ENTRY text."
   (with-temp-buffer
     (insert (org-brain-text entry t))
+    (org-mode)
     (org-element-parse-buffer)))
 
 (defun org-brain--file-targets (file)
@@ -2381,6 +2382,7 @@ Unless WANDER is t, `org-brain-stop-wandering' will be run."
          nil nil def-choice)))))
   (unless wander (org-brain-stop-wandering))
   (with-current-buffer (get-buffer-create "*org-brain*")
+    (setq-local tab-width 8)
     (setq-local indent-tabs-mode nil)
     (read-only-mode 1)
     (setq-local default-directory (file-name-directory (org-brain-entry-path entry)))
@@ -2422,11 +2424,11 @@ Unless WANDER is t, `org-brain-stop-wandering' will be run."
           (org-brain--vis-children entry)))
       (when (and org-brain-show-resources)
         (org-brain--vis-resources (org-brain-resources entry)))
+      (unless (eq major-mode 'org-brain-visualize-mode)
+        (org-brain-visualize-mode))
       (if org-brain-show-text
           (org-brain--vis-text entry)
         (run-hooks 'org-brain-after-visualize-hook))
-      (unless (eq major-mode 'org-brain-visualize-mode)
-        (org-brain-visualize-mode))
       (goto-char entry-pos)
       (set-buffer-modified-p nil))
     (unless nofocus
@@ -2813,6 +2815,8 @@ Used as `bookmark-make-record-function' in `org-brain-visualize-mode'."
   special-mode  "Org-brain Visualize"
   "Major mode for `org-brain-visualize'.
 \\{org-brain-visualize-mode-map}"
+  (derived-mode-add-parents 'org-brain-visualize-mode '(org-mode))
+  (setq-local tab-width 8)
   (setq-local revert-buffer-function #'org-brain-visualize-revert)
   (setq-local bookmark-make-record-function #'org-brain-make-bookmark-record))
 
