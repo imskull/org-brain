@@ -1678,7 +1678,9 @@ If run with `\\[universal-argument]', or SAME-WINDOW as t, use current window."
   (interactive "P")
   (if same-window
       (org-brain-goto (org-brain-entry-at-pt))
-    (org-brain-goto (org-brain-entry-at-pt) #'pop-to-buffer)))
+    ;; (org-brain-goto (org-brain-entry-at-pt) #'pop-to-buffer)))
+    ;; Force to other window regardless the buffer exists or not.
+    (org-brain-goto (org-brain-entry-at-pt) (lambda (buffer-or-name) (pop-to-buffer buffer-or-name t)))))
 
 ;;;###autoload
 (defun org-brain-goto-child (entry &optional all)
