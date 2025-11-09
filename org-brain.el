@@ -3130,11 +3130,13 @@ Helper function for `org-brain-visualize'."
               (setq org-brain--vis-entry-text-marker (point-marker))
               (insert "--- Entry -------------------------------------\n\n")
               (run-hooks 'org-brain-after-visualize-hook)
-              (insert (with-temp-buffer
-                        (insert text)
-                        (delay-mode-hooks
-                          (org-mode)
-                          (setq-local org-pretty-entities t)
+              (insert (save-excursion
+                        (with-temp-buffer
+                          (insert text)
+                          (delay-mode-hooks
+                            (org-mode)
+                            (setq-local org-pretty-entities t))
+                          (run-mode-hooks 'org-mode-hook)
                           (font-lock-ensure (point-min) (point-max))
                           (buffer-string))))
               (run-hooks 'org-brain-visualize-text-hook))
