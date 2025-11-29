@@ -3139,6 +3139,7 @@ Helper function for `org-brain-visualize'."
                           (run-mode-hooks 'org-mode-hook)
                           (font-lock-ensure (point-min) (point-max))
                           (buffer-string))))
+              (org-latex-preview)
               (run-hooks 'org-brain-visualize-text-hook))
           (run-hooks 'org-brain-after-visualize-hook)))
     (run-hooks 'org-brain-after-visualize-hook)))
